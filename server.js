@@ -1,6 +1,6 @@
 import express from 'express';
 import cors from 'cors';
-import { fetchAndProcess } from './scraper';
+import { fetchAndProcess } from './scraper.js';
 import dotenv from 'dotenv';
 dotenv.config();
 
