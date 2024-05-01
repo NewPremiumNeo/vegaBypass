@@ -1,5 +1,7 @@
 import fetch from 'node-fetch';
 import cheerio from 'cheerio';
+import dotenv from 'dotenv';
+dotenv.config();
 
 const headers1 = {
   "Host": "unilinks.lol",
@@ -45,13 +47,13 @@ async function fetchAndProcess(url) {
 
     const $ = cheerio.load(html);
 
-    const vcloudLinks = $('a[href^="https://vcloud.lol/"]').map((index, link) => $(link).attr('href')).get();
+    const filteredUrls = $(`${process.env.FILTER}`).map((index, link) => $(link).attr('href')).get();
 
     let finalUrls = [];
 
-    for (const [index, vcloudLink] of vcloudLinks.entries()) {
+    for (const [index, filteredUrl] of filteredUrls.entries()) {
       try {
-        const innerResponse = await fetch(vcloudLink, { headers2 });
+        const innerResponse = await fetch(filteredUrl, { headers2 });
         const innerHtml = await innerResponse.text();
         const $ = cheerio.load(innerHtml);
         const scriptTags = $('script[type="text/javascript"]');
@@ -59,18 +61,18 @@ async function fetchAndProcess(url) {
         if (scriptTags.length > 1) {
           const scriptContent = scriptTags.last().html();
           if (scriptContent) {
-            const urlStart = 'https://vcloud.lol/go.php?id=';
+            const urlStart = `${process.env.URLSTART}=`;
             const startIndex = scriptContent.indexOf(urlStart);
             if (startIndex !== -1) {
               const endIndex = scriptContent.indexOf("'", startIndex);
               if (endIndex !== -1) {
                 const extractedUrl = scriptContent.substring(startIndex + urlStart.length, endIndex);
-                const finalUrl = `${vcloudLink}?token=${extractedUrl}`;
+                const finalUrl = `${filteredUrl}?token=${extractedUrl}`;
                 const data = {
-                  name: vcloudLinks.length > 1 ? `Episode ${index + 1}` : `Download Link`,
+                  name: filteredUrls.length > 1 ? `Episode ${index + 1}` : `Download Link`,
                   finalUrl: finalUrl
                 };
-                console.log(`${vcloudLinks.length > 1 ? `Episode ${index + 1}` : `Download Link`}:- ${finalUrl}`);
+                console.log(`${filteredUrls.length > 1 ? `Episode ${index + 1}` : `Download Link`}:- ${finalUrl}`);
                 finalUrls.push(data);
               } else {
                 console.log("End of URL not found.");
