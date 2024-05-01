@@ -9,7 +9,7 @@ const headers = {
 async function fetchAndProcess(url) {
   try {
     console.log("Scraper ", url);
-    const response = await fetch(url, { headers });
+    const response = await fetch(url, { headers, redirect: 'follow' });
     const html = await response.text();
     console.log("HTML ", html);
 
