@@ -1,6 +1,6 @@
 import express from 'express';
 import cors from 'cors';
-import { fetchAndProcess } from './scraper.js';
+import { fetchAndProcess } from './scraper';
 import dotenv from 'dotenv';
 dotenv.config();
 
@@ -23,12 +23,14 @@ app.post('/bypass', async (req, res) => {
   try { 
     let finalUrls = await fetchAndProcess(url);
     console.log(finalUrls)
-    res.json({ success: true, finalUrls });
+    return res.json({ success: true, finalUrls });
   } catch (error) {
     console.error('Error processing URL:', error);
     res.status(500).json({ error: 'Failed to process URL' });
   }
 });
+
+
 const port = process.env.PORT || 8000;
 app.listen(port, () => {
   console.log(`Server is running on port ${port}`);

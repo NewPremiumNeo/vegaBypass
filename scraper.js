@@ -8,11 +8,13 @@ const headers = {
 
 async function fetchAndProcess(url) {
   try {
+    console.log("scraper ", url)
     const response = await fetch(url, { headers }); 
     const html = await response.text(); 
     const $ = cheerio.load(html);
 
     const vcloudLinks = $('a[href^="https://vcloud.lol/"]').map((index, link) => $(link).attr('href')).get();
+    console.log("vcloudLinks ", vcloudLinks)
     let finalUrls = []
     for (const [index, vcloudLink] of vcloudLinks.entries()) {
       try {
