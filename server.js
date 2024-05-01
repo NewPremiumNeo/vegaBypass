@@ -10,7 +10,11 @@ app.use(express.json());
 app.use(cors());
 
 app.get('/', (req, res)=>{
-  res.send("Hello World");
+  res.send("<center><h1>Hello World</h1></center>");
+})
+
+app.get('/working', (req, res)=>{
+  res.send("Working");
 })
 
 app.post('/bypass', async (req, res) => {
