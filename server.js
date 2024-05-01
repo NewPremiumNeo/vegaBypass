@@ -19,6 +19,7 @@ app.get('/working', (req, res)=>{
 
 app.post('/bypass', async (req, res) => {
   const { url } = req.body;
+  console.log("Url Come ", url)
   try { 
     let finalUrls = await fetchAndProcess(url);
     console.log(finalUrls)
