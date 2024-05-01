@@ -40,15 +40,12 @@ const headers2 = {
 
 async function fetchAndProcess(url) {
   try {
-    console.log("Scraper ", url);
     const response = await fetch(url, { headers1, redirect: 'follow' });
     const html = await response.text();
-    console.log("HTML ", html);
 
     const $ = cheerio.load(html);
 
     const vcloudLinks = $('a[href^="https://vcloud.lol/"]').map((index, link) => $(link).attr('href')).get();
-    console.log("vcloudLinks ", vcloudLinks);
 
     let finalUrls = [];
 

@@ -22,7 +22,6 @@ app.post('/bypass', async (req, res) => {
   console.log("Url Come ", url)
   try { 
     let finalUrls = await fetchAndProcess(url);
-    console.log(finalUrls)
     return res.json({ success: true, finalUrls });
   } catch (error) {
     console.error('Error processing URL:', error);
