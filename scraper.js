@@ -8,21 +8,23 @@ const headers = {
 
 async function fetchAndProcess(url) {
   try {
-    console.log("scraper ", url)
+    console.log("Scraper ", url);
     const response = await fetch(url, { headers });
-    console.log("res ", response) 
-    const html = await response.text(); 
-    console.log("html ", html) 
+    const html = await response.text();
+    console.log("HTML ", html);
+
     const $ = cheerio.load(html);
 
     const vcloudLinks = $('a[href^="https://vcloud.lol/"]').map((index, link) => $(link).attr('href')).get();
-    console.log("vcloudLinks ", vcloudLinks)
-    let finalUrls = []
+    console.log("vcloudLinks ", vcloudLinks);
+
+    let finalUrls = [];
+
     for (const [index, vcloudLink] of vcloudLinks.entries()) {
       try {
-        const response = await fetch(vcloudLink, { headers });
-        const html = await response.text();
-        const $ = cheerio.load(html);
+        const innerResponse = await fetch(vcloudLink, { headers });
+        const innerHtml = await innerResponse.text();
+        const $ = cheerio.load(innerHtml);
         const scriptTags = $('script[type="text/javascript"]');
 
         if (scriptTags.length > 1) {
@@ -38,9 +40,9 @@ async function fetchAndProcess(url) {
                 const data = {
                   name: vcloudLinks.length > 1 ? `Episode ${index + 1}` : `Download Link`,
                   finalUrl: finalUrl
-                }
+                };
                 console.log(`${vcloudLinks.length > 1 ? `Episode ${index + 1}` : `Download Link`}:- ${finalUrl}`);
-                finalUrls.push(data)
+                finalUrls.push(data);
               } else {
                 console.log("End of URL not found.");
               }
