@@ -3,6 +3,7 @@ import cors from 'cors';
 import { fetchAndProcess } from './scraper.js';
 import dotenv from 'dotenv';
 dotenv.config();
+import fetch from 'node-fetch';
 
 const app = express();
 
@@ -31,6 +32,24 @@ app.post('/bypass', async (req, res) => {
 
 
 const port = process.env.PORT || 8000;
+
+async function callURL() {
+  try {
+      const url = "https://vegabypass.onrender.com/";
+      const response = await fetch(url);
+      if (response.ok) {
+          console.log("Request sent successfully");
+      } else {
+          throw new Error(`HTTP error! Status: ${response.status}`);
+      }
+  } catch (error) {
+      console.error("Error:", error.message);
+  }
+}
+
 app.listen(port, () => {
-  console.log(`Server is running on port ${port}`);
+  console.log(`Server running on port ${port}`);
+  
+  callURL();
+  setInterval(callURL, 2 * 60 * 1000);
 });
