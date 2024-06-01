@@ -50,6 +50,6 @@ async function callURL() {
 app.listen(port, () => {
   console.log(`Server running on port ${port}`);
   
-  callURL();
-  setInterval(callURL, 2 * 60 * 1000);
+  // callURL();
+  // setInterval(callURL, 2 * 60 * 1000);
 });
